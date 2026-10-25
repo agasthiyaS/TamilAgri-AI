@@ -34,8 +34,8 @@ export default function Settings({ t, lang, setLang, isDemo }) {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: '0.75rem', borderBottom: '1px solid #E2E8F0' }}>
               <div>
-                <div style={{ fontWeight: 600, color: '#1F2937' }}>Operating Mode</div>
-                <div style={{ fontSize: '0.8rem', color: '#64748B' }}>Zero-cost simulation environment</div>
+                <div style={{ fontWeight: 600, color: '#1F2937' }}>{t.operatingMode}</div>
+                <div style={{ fontSize: '0.8rem', color: '#64748B' }}>{t.zeroCostSimEnv}</div>
               </div>
               <span className={isDemo ? 'demo-pill' : 'live-pill'}>
                 {isDemo ? t.demoMode : t.liveMode}
@@ -45,30 +45,34 @@ export default function Settings({ t, lang, setLang, isDemo }) {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: '0.75rem', borderBottom: '1px solid #E2E8F0' }}>
               <div>
                 <div style={{ fontWeight: 600, color: '#1F2937' }}>{t.weatherProvider}</div>
-                <div style={{ fontSize: '0.8rem', color: '#64748B' }}>Active adapter: <code>{settingsData?.weather_provider || 'demo'}</code></div>
+                <div style={{ fontSize: '0.8rem', color: '#64748B' }}>
+                  {t.activeAdapterLabel} <code>{settingsData?.weather_provider || 'demo'}</code>
+                </div>
               </div>
               <span style={{ fontSize: '0.85rem', color: '#166534', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                <CheckCircle2 size={16} color="#166534" /> Ready
+                <CheckCircle2 size={16} color="#166534" /> {t.statusReady}
               </span>
             </div>
 
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: '0.75rem', borderBottom: '1px solid #E2E8F0' }}>
               <div>
                 <div style={{ fontWeight: 600, color: '#1F2937' }}>{t.smsProvider}</div>
-                <div style={{ fontSize: '0.8rem', color: '#64748B' }}>Active adapter: <code>{settingsData?.sms_provider || 'demo'}</code> (Simulated)</div>
+                <div style={{ fontSize: '0.8rem', color: '#64748B' }}>
+                  {t.activeAdapterLabel} <code>{settingsData?.sms_provider || 'demo'}</code> ({t.statusSimulated})
+                </div>
               </div>
               <span style={{ fontSize: '0.85rem', color: '#92400E', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                <CheckCircle2 size={16} color="#D97706" /> Simulated
+                <CheckCircle2 size={16} color="#D97706" /> {t.statusSimulated}
               </span>
             </div>
 
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <div>
-                <div style={{ fontWeight: 600, color: '#1F2937' }}>Database Storage</div>
-                <div style={{ fontSize: '0.8rem', color: '#64748B' }}>SQLite (Local file <code>tamilagri.db</code>)</div>
+                <div style={{ fontWeight: 600, color: '#1F2937' }}>{t.dbStorageLabel}</div>
+                <div style={{ fontSize: '0.8rem', color: '#64748B' }}>{t.sqliteLocalFile}</div>
               </div>
               <span style={{ fontSize: '0.85rem', color: '#0F766E', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                <Database size={16} color="#0F766E" /> Connected
+                <Database size={16} color="#0F766E" /> {t.statusConnected}
               </span>
             </div>
           </div>
@@ -87,7 +91,7 @@ export default function Settings({ t, lang, setLang, isDemo }) {
 
           <div style={{ background: '#F8FAFC', padding: '1rem', borderRadius: 'var(--radius-sm)', border: '1px solid #E2E8F0', marginBottom: '1.25rem' }}>
             <div style={{ fontSize: '0.85rem', fontWeight: 600, color: '#1F2937', marginBottom: '0.5rem' }}>
-              Dashboard Display Language / மொழி
+              {t.displayLanguageLabel}
             </div>
             <div style={{ display: 'flex', gap: '0.75rem' }}>
               <button
@@ -131,13 +135,13 @@ export default function Settings({ t, lang, setLang, isDemo }) {
           {t.tnauVerificationText}
         </p>
         <div style={{ fontSize: '0.82rem', color: '#475569', background: '#F8FAFC', padding: '0.85rem 1rem', borderRadius: 'var(--radius-sm)', border: '1px solid #E2E8F0' }}>
-          <strong style={{ color: '#166534' }}>Configured Rule Thresholds (backend/app/rules/crop_rules.py):</strong>
+          <strong style={{ color: '#166534' }}>{t.configuredThresholdsLabel}</strong>
           <ul style={{ marginLeft: '1.25rem', marginTop: '0.5rem', display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
-            <li><strong>Nursery:</strong> Heavy Rain &gt; 50mm/day (submergence risk) | Heat &gt; 38°C (seedling scorch)</li>
-            <li><strong>Tillering:</strong> Heavy Rain &gt; 65mm/day (tiller inhibition) | Heat &gt; 39°C (transpiration stress)</li>
-            <li><strong>Flowering:</strong> Heavy Rain &gt; 40mm/day (pollen wash) | Heat &gt; 36°C (spikelet sterility)</li>
-            <li><strong>Grain filling:</strong> Heavy Rain &gt; 50mm/day (crop lodging) | Heat &gt; 38°C (forced maturity & chalkiness)</li>
-            <li><strong>Harvest:</strong> Rain &gt; 15mm/day (grain sprouting & machinery stall) | Heat &gt; 40°C (grain sun-cracking)</li>
+            <li><strong>{t.stageNursery}:</strong> {t.thresholdNursery}</li>
+            <li><strong>{t.stageTillering}:</strong> {t.thresholdTillering}</li>
+            <li><strong>{t.stageFlowering}:</strong> {t.thresholdFlowering}</li>
+            <li><strong>{t.stageGrainFilling}:</strong> {t.thresholdGrainFilling}</li>
+            <li><strong>{t.stageHarvest}:</strong> {t.thresholdHarvest}</li>
           </ul>
         </div>
       </div>

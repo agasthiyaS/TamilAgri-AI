@@ -4,10 +4,15 @@ async function handleResponse(response) {
   if (!response.ok) {
     let errorDetail = 'API Request Failed';
     try {
-      const errorJson = await response.json();
-      errorDetail = errorJson.detail || JSON.stringify(errorJson);
+      const text = await response.text();
+      try {
+        const errorJson = JSON.parse(text);
+        errorDetail = errorJson.detail || (typeof errorJson === 'string' ? errorJson : JSON.stringify(errorJson));
+      } catch {
+        errorDetail = text || `HTTP Error ${response.status}`;
+      }
     } catch {
-      errorDetail = await response.text();
+      errorDetail = `HTTP Error ${response.status}`;
     }
     const err = new Error(errorDetail || `HTTP Error ${response.status}`);
     err.status = response.status;

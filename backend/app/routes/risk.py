@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 from ..schemas.risk import RiskAnalysisRequest, RiskAnalysisResult
 from ..services.weather_adapter import get_weather_provider
 from ..services.risk_engine import evaluate_crop_risk
@@ -16,10 +16,21 @@ async def analyze_crop_risk(payload: RiskAnalysisRequest):
         provider = get_weather_provider()
         forecast = await provider.get_forecast(payload.location)
 
-    result = evaluate_crop_risk(
-        location=payload.location,
-        crop=payload.crop,
-        growth_stage=payload.growth_stage,
-        forecast=forecast
-    )
-    return result
+    if not forecast or not getattr(forecast, "daily_forecasts", None):
+        raise HTTPException(
+            status_code=400,
+            detail="Invalid forecast data: no daily forecasts available for risk evaluation."
+        )
+
+    try:
+        result = evaluate_crop_risk(
+            location=payload.location,
+            crop=payload.crop,
+            growth_stage=payload.growth_stage,
+            forecast=forecast
+        )
+        return result
+    except Exception as e:
+        if isinstance(e, HTTPException):
+            raise e
+        raise HTTPException(status_code=500, detail=f"Risk evaluation error: {str(e)}")

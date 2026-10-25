@@ -11,11 +11,17 @@ import { api } from './api';
 import { CheckCircle2, AlertCircle } from 'lucide-react';
 
 export default function App() {
-  const [lang, setLang] = useState('ta'); // Default to Tamil
+  const [lang, setLang] = useState(() => {
+    return localStorage.getItem('tamilagri_lang') || 'ta';
+  });
   const [activeTab, setActiveTab] = useState('dashboard');
   const [farmers, setFarmers] = useState([]);
   const [isDemo, setIsDemo] = useState(true);
   const [toast, setToast] = useState(null);
+
+  useEffect(() => {
+    localStorage.setItem('tamilagri_lang', lang);
+  }, [lang]);
 
   // Alert modal state
   const [modalOpen, setModalOpen] = useState(false);
@@ -56,12 +62,15 @@ export default function App() {
     try {
       const result = await api.sendAlert(payload);
       setModalOpen(false);
-      showToast(
-        `Alert dispatched to ${result.farmer_name}! Status: [${result.status}] via ${result.provider} adapter.`,
-        'success'
-      );
+      const msg = t.dispatchToast
+        ? t.dispatchToast
+            .replace('{name}', result.farmer_name)
+            .replace('{status}', result.status)
+            .replace('{provider}', result.provider)
+        : `Alert dispatched to ${result.farmer_name}! Status: [${result.status}] via ${result.provider} adapter.`;
+      showToast(msg, 'success');
     } catch (err) {
-      showToast(err.message || 'Failed to dispatch alert', 'error');
+      showToast(err.message || (lang === 'ta' ? 'எச்சரிக்கை அனுப்புவதில் பிழை ஏற்பட்டது' : 'Failed to dispatch alert'), 'error');
     } finally {
       setIsSendingAlert(false);
     }
@@ -166,10 +175,10 @@ export default function App() {
         }}
       >
         <p>
-          <strong>TamilAgri AI</strong> — AI-Powered Crop-Specific Climate Risk Analysis & SMS Early Warning System.
+          <strong>{t.projectTitle || 'TamilAgri AI'}</strong> — {t.footerTitle}
         </p>
         <p style={{ marginTop: '0.25rem' }}>
-          Designed for Hackathons • Tamil Nadu Agricultural University (TNAU) Agronomy Rules Demonstration • Clean Architecture
+          {t.footerSubtitle}
         </p>
       </footer>
     </div>

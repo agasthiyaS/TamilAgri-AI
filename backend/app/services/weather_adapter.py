@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 from datetime import datetime, timedelta
 from typing import Dict, Any
 import httpx
+from fastapi import HTTPException
 from ..config import settings
 from ..schemas.weather import WeatherForecastResponse, DailyForecast
 
@@ -181,7 +182,7 @@ class OpenMeteoWeatherProvider(BaseWeatherProvider):
         lat, lon, resolved_name = coords
 
         try:
-            async with httpx.AsyncClient(timeout=8.0) as client:
+            async with httpx.AsyncClient(timeout=12.0) as client:
                 res = await client.get(
                     "https://api.open-meteo.com/v1/forecast",
                     params={
@@ -192,56 +193,77 @@ class OpenMeteoWeatherProvider(BaseWeatherProvider):
                         "forecast_days": 5
                     }
                 )
-                if res.status_code == 200:
-                    data = res.json().get("daily", {})
-                    dates = data.get("time", [])
-                    max_temps = data.get("temperature_2m_max", [])
-                    min_temps = data.get("temperature_2m_min", [])
-                    rains = data.get("precipitation_sum", [])
+        except httpx.TimeoutException:
+            raise HTTPException(
+                status_code=503,
+                detail=f"Open-Meteo weather service timed out while fetching forecast for '{location}'."
+            )
+        except httpx.RequestError as exc:
+            raise HTTPException(
+                status_code=503,
+                detail=f"Open-Meteo weather service connection error: {exc}"
+            )
+        except Exception as exc:
+            raise HTTPException(
+                status_code=502,
+                detail=f"Failed to communicate with Open-Meteo weather service: {exc}"
+            )
 
-                    forecasts = []
-                    for i in range(len(dates)):
-                        rain = float(rains[i]) if i < len(rains) and rains[i] is not None else 0.0
-                        t_max = float(max_temps[i]) if i < len(max_temps) and max_temps[i] is not None else 32.0
-                        t_min = float(min_temps[i]) if i < len(min_temps) and min_temps[i] is not None else 24.0
+        if res.status_code != 200:
+            raise HTTPException(
+                status_code=502,
+                detail=f"Open-Meteo weather API returned error HTTP {res.status_code}: {res.text}"
+            )
 
-                        condition = "Clear"
-                        if rain > 40:
-                            condition = "Heavy Rain"
-                        elif rain > 15:
-                            condition = "Moderate Rain"
-                        elif rain > 2:
-                            condition = "Light Rain"
-                        elif t_max > 38:
-                            condition = "Extreme Heat"
-                        else:
-                            condition = "Partly Cloudy"
+        data = res.json().get("daily", {})
+        dates = data.get("time", [])
+        max_temps = data.get("temperature_2m_max", [])
+        min_temps = data.get("temperature_2m_min", [])
+        rains = data.get("precipitation_sum", [])
 
-                        forecasts.append(DailyForecast(
-                            date=dates[i],
-                            temp_max_c=t_max,
-                            temp_min_c=t_min,
-                            rainfall_mm=rain,
-                            humidity_pct=75.0,
-                            weather_condition=condition
-                        ))
+        if not dates:
+            raise HTTPException(
+                status_code=502,
+                detail=f"No forecast data returned by Open-Meteo weather service for '{location}'."
+            )
 
-                    return WeatherForecastResponse(
-                        location=resolved_name,
-                        source="Open-Meteo Live API (Free Tier)",
-                        period=f"{forecasts[0].date} to {forecasts[-1].date} (5-Day Window)",
-                        is_demo=False,
-                        daily_forecasts=forecasts
-                    )
-        except Exception:
-            # If network error or live API fails, seamlessly fallback to Demo provider
-            pass
+        forecasts = []
+        for i in range(len(dates)):
+            rain = float(rains[i]) if i < len(rains) and rains[i] is not None else 0.0
+            t_max = float(max_temps[i]) if i < len(max_temps) and max_temps[i] is not None else 32.0
+            t_min = float(min_temps[i]) if i < len(min_temps) and min_temps[i] is not None else 24.0
 
-        demo_provider = DemoWeatherProvider()
-        return await demo_provider.get_forecast(location)
+            condition = "Clear"
+            if rain > 40:
+                condition = "Heavy Rain"
+            elif rain > 15:
+                condition = "Moderate Rain"
+            elif rain > 2:
+                condition = "Light Rain"
+            elif t_max > 38:
+                condition = "Extreme Heat"
+            else:
+                condition = "Partly Cloudy"
+
+            forecasts.append(DailyForecast(
+                date=dates[i],
+                temp_max_c=t_max,
+                temp_min_c=t_min,
+                rainfall_mm=rain,
+                humidity_pct=75.0,
+                weather_condition=condition
+            ))
+
+        return WeatherForecastResponse(
+            location=resolved_name,
+            source="Open-Meteo Live API (Free Tier)",
+            period=f"{forecasts[0].date} to {forecasts[-1].date} (5-Day Window)",
+            is_demo=False,
+            daily_forecasts=forecasts
+        )
 
 def get_weather_provider() -> BaseWeatherProvider:
     """Factory selecting the configured weather provider."""
-    if settings.WEATHER_PROVIDER == "open_meteo" and not settings.DEMO_MODE:
+    if settings.WEATHER_PROVIDER == "open_meteo":
         return OpenMeteoWeatherProvider()
     return DemoWeatherProvider()

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Send, X, AlertTriangle, ShieldCheck, MessageSquare } from 'lucide-react';
 import RiskBadge from './RiskBadge';
 import { api } from '../api';
+import { translateHazard, translateLocation, translateGrowthStage } from '../i18n/translations';
 
 export default function AlertModal({
   isOpen,
@@ -21,6 +22,9 @@ export default function AlertModal({
   const [forceResend, setForceResend] = useState(false);
   const [customMessage, setCustomMessage] = useState('');
   const [previewSMS, setPreviewSMS] = useState('');
+
+  const isTamil = t.colFarmer === 'விவசாயி';
+  const lang = isTamil ? 'ta' : 'en';
 
   const currentFarmer = farmers.find((f) => String(f.id) === String(selectedFarmerId));
 
@@ -82,10 +86,10 @@ export default function AlertModal({
               onChange={(e) => setSelectedFarmerId(e.target.value)}
               required
             >
-              <option value="">-- Choose registered farmer --</option>
+              <option value="">{t.chooseFarmerOption}</option>
               {farmers.map((f) => (
                 <option key={f.id} value={f.id}>
-                  {f.name} ({f.location} - {f.growth_stage} | {f.preferred_language === 'ta' ? 'தமிழ்' : 'English'})
+                  {f.name} ({translateLocation(f.location, lang)} - {translateGrowthStage(f.growth_stage, lang)} | {f.preferred_language === 'ta' ? 'தமிழ்' : 'English'})
                 </option>
               ))}
             </select>
@@ -94,7 +98,9 @@ export default function AlertModal({
           <div style={{ display: 'flex', gap: '1rem', marginBottom: '1.25rem' }}>
             <div style={{ flex: 1 }}>
               <span className="form-label">{t.colHazard}</span>
-              <div style={{ fontWeight: 600, color: 'var(--text-main)', marginTop: '0.25rem' }}>{hazard}</div>
+              <div style={{ fontWeight: 600, color: 'var(--text-main)', marginTop: '0.25rem' }}>
+                {translateHazard(hazard, lang)}
+              </div>
             </div>
             <div style={{ flex: 1 }}>
               <span className="form-label">{t.colRisk}</span>
@@ -106,15 +112,15 @@ export default function AlertModal({
 
           <div className="form-group">
             <label className="form-label">
-              Optional Custom Message Override (Leave blank for automated bilingual template)
+              {t.customMessageLabel}
             </label>
             <textarea
               className="form-textarea"
               rows="2"
               placeholder={
                 currentFarmer?.preferred_language === 'ta'
-                  ? 'தானியங்கி தமிழ் மாதிரி செய்தி பயன்படுத்தப்படும்...'
-                  : 'Automatic English SMS template will be formatted...'
+                  ? t.customMessagePlaceholderTa
+                  : t.customMessagePlaceholderEn
               }
               value={customMessage}
               onChange={(e) => setCustomMessage(e.target.value)}
@@ -126,8 +132,8 @@ export default function AlertModal({
             <label className="form-label" style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#166534' }}>
               <MessageSquare size={14} />
               {currentFarmer?.preferred_language === 'ta'
-                ? 'தமிழ் SMS முன்னோட்டம் (Tamil SMS Preview)'
-                : 'English SMS Preview'}
+                ? t.tamilSmsPreviewTitle
+                : t.englishSmsPreviewTitle}
             </label>
             <div
               style={{
@@ -142,7 +148,7 @@ export default function AlertModal({
                 color: '#1F2937',
               }}
             >
-              {customMessage.trim() ? customMessage : previewSMS || 'Generating template preview...'}
+              {customMessage.trim() ? customMessage : previewSMS || t.generatingPreview}
             </div>
           </div>
 
@@ -162,7 +168,7 @@ export default function AlertModal({
           <div className="disclaimer-banner" style={{ margin: '1rem 0' }}>
             <ShieldCheck size={20} style={{ flexShrink: 0 }} />
             <div>
-              <strong>DEMO GATEWAY:</strong> Simulated dispatch will be logged in the database without carrier SMS charges.
+              <strong>{t.demoMode}:</strong> {t.demoGatewayNotice}
             </div>
           </div>
 

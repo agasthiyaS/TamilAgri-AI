@@ -2,6 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { History, Filter, Eye, RefreshCw, X, MessageSquare, ShieldCheck } from 'lucide-react';
 import RiskBadge from '../components/RiskBadge';
 import { api } from '../api';
+import {
+  translateLocation,
+  translateGrowthStage,
+  translateHazard,
+  translateStatus,
+  translateCrop,
+} from '../i18n/translations';
 
 export default function AlertHistory({ t, lang }) {
   const [alerts, setAlerts] = useState([]);
@@ -56,7 +63,7 @@ export default function AlertHistory({ t, lang }) {
         </div>
 
         <button className="btn btn-outline btn-sm" onClick={fetchHistory} disabled={loading}>
-          <RefreshCw size={14} /> Refresh Logs
+          <RefreshCw size={14} /> {t.refreshLogsBtn}
         </button>
       </div>
 
@@ -64,7 +71,7 @@ export default function AlertHistory({ t, lang }) {
       <div className="card" style={{ padding: '1rem 1.25rem', marginBottom: '1.5rem' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
-            <Filter size={16} /> Filters:
+            <Filter size={16} /> {t.filterLabel}
           </div>
 
           <select
@@ -97,9 +104,9 @@ export default function AlertHistory({ t, lang }) {
             onChange={(e) => setFilterStatus(e.target.value)}
           >
             <option value="">{t.filterStatus}</option>
-            <option value="SIMULATED">SIMULATED</option>
-            <option value="DELIVERED">DELIVERED</option>
-            <option value="FAILED">FAILED</option>
+            <option value="SIMULATED">{translateStatus('SIMULATED', lang)}</option>
+            <option value="DELIVERED">{translateStatus('DELIVERED', lang)}</option>
+            <option value="FAILED">{translateStatus('FAILED', lang)}</option>
           </select>
 
           {(filterHazard || filterRisk || filterStatus) && (
@@ -111,7 +118,7 @@ export default function AlertHistory({ t, lang }) {
                 setFilterStatus('');
               }}
             >
-              Reset
+              {t.resetBtn}
             </button>
           )}
         </div>
@@ -120,7 +127,7 @@ export default function AlertHistory({ t, lang }) {
       {/* Log Table Card */}
       <div className="card">
         {loading ? (
-          <div style={{ padding: '3rem', textAlign: 'center', color: 'var(--text-dim)' }}>Loading alert logs...</div>
+          <div style={{ padding: '3rem', textAlign: 'center', color: 'var(--text-dim)' }}>{t.loadingLogs}</div>
         ) : alerts.length === 0 ? (
           <div style={{ padding: '3rem', textAlign: 'center', color: 'var(--text-dim)' }}>{t.noAlertsYet}</div>
         ) : (
@@ -135,7 +142,7 @@ export default function AlertHistory({ t, lang }) {
                   <th>{t.colLang}</th>
                   <th>{t.colStatus}</th>
                   <th>{t.colSentAt}</th>
-                  <th>Actions</th>
+                  <th>{t.colActions}</th>
                 </tr>
               </thead>
               <tbody>
@@ -148,12 +155,12 @@ export default function AlertHistory({ t, lang }) {
                       </div>
                     </td>
                     <td>
-                      {alert.location}
+                      {translateLocation(alert.location, lang)}
                       <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)' }}>
-                        {alert.crop} • {alert.growth_stage}
+                        {translateCrop(alert.crop, lang)} • {translateGrowthStage(alert.growth_stage, lang)}
                       </div>
                     </td>
-                    <td style={{ fontWeight: 500 }}>{alert.hazard}</td>
+                    <td style={{ fontWeight: 500 }}>{translateHazard(alert.hazard, lang)}</td>
                     <td>
                       <RiskBadge level={alert.risk_level} t={t} showIcon={false} />
                     </td>
@@ -190,7 +197,7 @@ export default function AlertHistory({ t, lang }) {
                           fontWeight: 700,
                         }}
                       >
-                        {alert.status}
+                        {translateStatus(alert.status, lang)}
                       </span>
                     </td>
                     <td style={{ fontSize: '0.8rem', color: '#64748B' }}>
@@ -220,7 +227,7 @@ export default function AlertHistory({ t, lang }) {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
               <h3 style={{ fontSize: '1.2rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#1F2937' }}>
                 <MessageSquare size={18} color="#166534" />
-                SMS Payload Details (Alert #{selectedAlert.id})
+                {t.smsPayloadTitle} (#{selectedAlert.id})
               </h3>
               <button
                 onClick={() => setSelectedAlert(null)}
@@ -231,7 +238,7 @@ export default function AlertHistory({ t, lang }) {
             </div>
 
             <div style={{ marginBottom: '1rem', fontSize: '0.85rem', color: '#64748B' }}>
-              Recipient: <strong style={{ color: '#1F2937' }}>{selectedAlert.farmer_name}</strong> ({selectedAlert.mobile_number}) • Gateway: <code>{selectedAlert.provider}</code> (ID: {selectedAlert.provider_message_id || 'N/A'})
+              {t.recipientLabel} <strong style={{ color: '#1F2937' }}>{selectedAlert.farmer_name}</strong> ({selectedAlert.mobile_number}) • {t.gatewayLabel} <code>{selectedAlert.provider}</code> (ID: {selectedAlert.provider_message_id || 'N/A'})
             </div>
 
             <div

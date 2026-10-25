@@ -19,7 +19,7 @@ export default function Navbar({ activeTab, setActiveTab, lang, setLang, t, isDe
           </div>
           <div>
             <div className="brand-title">
-              TamilAgri <span>AI</span>
+              {lang === 'ta' ? 'தமிழ் அக்ரி ' : 'TamilAgri '}<span>AI</span>
             </div>
             <span className="brand-tag">{t.projectSubtitle}</span>
           </div>
@@ -47,7 +47,7 @@ export default function Navbar({ activeTab, setActiveTab, lang, setLang, t, isDe
 
         <div className="nav-actions">
           {isDemo ? (
-            <span className="demo-pill" title="Running in zero-cost Demo Mode without real SMS charges">
+            <span className="demo-pill" title={t.demoPillTooltip}>
               ● {t.demoMode}
             </span>
           ) : (

@@ -3,26 +3,13 @@ import { CloudSun, Send, ShieldAlert, AlertCircle, Info, CheckCircle2, ChevronRi
 import RiskBadge from '../components/RiskBadge';
 import WeatherCard from '../components/WeatherCard';
 import { api } from '../api';
-
-const TN_DISTRICTS = [
-  'Thanjavur',
-  'Madurai',
-  'Tiruchirappalli',
-  'Thiruvarur',
-  'Nagapattinam',
-  'Coimbatore',
-  'Cuddalore',
-  'Salem',
-  'Tirunelveli',
-];
-
-const PADDY_STAGES = [
-  { id: 'Nursery', en: 'Nursery (Seedling emergence)', ta: 'நாற்றங்கால் பருவம்' },
-  { id: 'Tillering', en: 'Tillering (Vegetative branching)', ta: 'தூர் கட்டும் பருவம்' },
-  { id: 'Flowering', en: 'Flowering (Anthesis & Pollination)', ta: 'பூக்கும் பருவம்' },
-  { id: 'Grain filling', en: 'Grain filling (Milk & Dough stage)', ta: 'பால் பிடிக்கும் / மணி முதிரும் பருவம்' },
-  { id: 'Harvest', en: 'Harvest (Ripening & Threshing)', ta: 'அறுவடைப் பருவம்' },
-];
+import {
+  translateLocation,
+  translateGrowthStage,
+  translateHazard,
+  LOCATIONS,
+  GROWTH_STAGES,
+} from '../i18n/translations';
 
 export default function RiskAnalysis({ t, lang, onOpenAlertModal, farmers = [] }) {
   const [location, setLocation] = useState('Thanjavur');
@@ -51,7 +38,7 @@ export default function RiskAnalysis({ t, lang, onOpenAlertModal, farmers = [] }
       });
       setRiskResult(result);
     } catch (err) {
-      setError(err.message || 'Failed to evaluate climate risk');
+      setError(err.message || (lang === 'ta' ? 'இடர் பகுப்பாய்வு செய்வதில் பிழை ஏற்பட்டது' : 'Failed to evaluate climate risk'));
     } finally {
       setLoading(false);
     }
@@ -125,9 +112,9 @@ export default function RiskAnalysis({ t, lang, onOpenAlertModal, farmers = [] }
                   setCustomLocation('');
                 }}
               >
-                {TN_DISTRICTS.map((dist) => (
+                {Object.keys(LOCATIONS).map((dist) => (
                   <option key={dist} value={dist}>
-                    {dist}
+                    {translateLocation(dist, lang)}
                   </option>
                 ))}
               </select>
@@ -135,7 +122,7 @@ export default function RiskAnalysis({ t, lang, onOpenAlertModal, farmers = [] }
             <input
               type="text"
               className="form-input"
-              placeholder="Or enter any Tamil Nadu district/taluk name..."
+              placeholder={t.districtPlaceholder}
               value={customLocation}
               onChange={(e) => setCustomLocation(e.target.value)}
             />
@@ -149,14 +136,14 @@ export default function RiskAnalysis({ t, lang, onOpenAlertModal, farmers = [] }
               value={stage}
               onChange={(e) => setStage(e.target.value)}
             >
-              {PADDY_STAGES.map((s) => (
-                <option key={s.id} value={s.id}>
-                  {lang === 'ta' ? s.ta : s.en}
+              {Object.keys(GROWTH_STAGES).map((stageKey) => (
+                <option key={stageKey} value={stageKey}>
+                  {translateGrowthStage(stageKey, lang)}
                 </option>
               ))}
             </select>
             <div className="form-help">
-              Crop: <strong>Paddy (Oryza sativa)</strong> • Evaluated against rain & heat thresholds
+              {t.cropThresholdNote}
             </div>
           </div>
         </div>
@@ -178,7 +165,7 @@ export default function RiskAnalysis({ t, lang, onOpenAlertModal, farmers = [] }
         <div className="card" style={{ marginBottom: '2rem' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
             <h3 style={{ fontSize: '1.1rem', fontWeight: 600, color: 'var(--text-main)' }}>
-              {t.weatherOverview} ({activeLocation})
+              {t.weatherOverview} ({translateLocation(activeLocation, lang)})
             </h3>
             <span style={{ fontSize: '0.8rem', color: 'var(--text-dim)' }}>
               {forecast.source} • {forecast.period}
@@ -187,7 +174,7 @@ export default function RiskAnalysis({ t, lang, onOpenAlertModal, farmers = [] }
 
           <div className="forecast-strip">
             {forecast.daily_forecasts.map((d) => (
-              <WeatherCard key={d.date} day={d} />
+              <WeatherCard key={d.date} day={d} lang={lang} />
             ))}
           </div>
         </div>
@@ -199,11 +186,11 @@ export default function RiskAnalysis({ t, lang, onOpenAlertModal, farmers = [] }
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', marginBottom: '1.5rem' }}>
             <div>
               <span style={{ fontSize: '0.85rem', color: '#64748B' }}>
-                {t.overallRiskLevel} for {activeLocation}
+                {t.overallRiskLevelFor} {translateLocation(activeLocation, lang)}
               </span>
               <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginTop: '0.25rem' }}>
                 <span style={{ fontSize: '1.5rem', fontWeight: 700, color: '#1F2937' }}>
-                  {riskResult.crop} • {lang === 'ta' ? PADDY_STAGES.find((s) => s.id === stage)?.ta : stage}
+                  {t.paddyCrop} • {translateGrowthStage(stage, lang)}
                 </span>
                 <RiskBadge level={riskResult.overall_risk} t={t} />
               </div>
@@ -221,7 +208,7 @@ export default function RiskAnalysis({ t, lang, onOpenAlertModal, farmers = [] }
               }
             >
               <Send size={16} />
-              {t.triggerWarningAlert} ({matchingFarmers.length} registered in area)
+              {t.triggerWarningAlert} ({matchingFarmers.length} {t.registeredInArea})
             </button>
           </div>
 
@@ -249,9 +236,7 @@ export default function RiskAnalysis({ t, lang, onOpenAlertModal, farmers = [] }
               >
                 <Languages size={18} color="#166534" />
                 <span>
-                  {lang === 'ta'
-                    ? 'தமிழ் அக்ரி AI வேளாண் ஆலோசனை (Language Intelligence)'
-                    : 'TamilAgri AI Climate Advisory (Language Intelligence)'}
+                  {t.advisoryBannerTitle}
                 </span>
               </div>
               <p style={{ fontSize: '1rem', color: '#1F2937', lineHeight: 1.6, fontWeight: 500 }}>
@@ -274,22 +259,18 @@ export default function RiskAnalysis({ t, lang, onOpenAlertModal, farmers = [] }
               >
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
                   <div style={{ fontWeight: 700, fontSize: '1.1rem', color: '#1F2937' }}>
-                    {lang === 'ta' && hazardItem.hazard === 'Heavy Rainfall'
-                      ? 'கனமழை இடர்பாடு'
-                      : lang === 'ta' && hazardItem.hazard === 'Extreme Heat'
-                      ? 'கடும் வெப்ப இடர்பாடு'
-                      : hazardItem.hazard}
+                    {translateHazard(hazardItem.hazard, lang)}
                   </div>
                   <RiskBadge level={hazardItem.risk_level} t={t} />
                 </div>
 
                 <div style={{ fontSize: '0.8rem', color: '#64748B', marginBottom: '0.75rem', fontFamily: 'monospace' }}>
-                  {hazardItem.trigger_value} | Threshold: {hazardItem.threshold_info}
+                  {hazardItem.trigger_value} | {t.thresholdLabel} {hazardItem.threshold_info}
                 </div>
 
                 <div style={{ marginBottom: '1rem' }}>
                   <div style={{ fontSize: '0.8rem', fontWeight: 600, color: '#475569', marginBottom: '0.25rem' }}>
-                    {lang === 'ta' ? 'காரணம் (Reason):' : 'Risk Explanation:'}
+                    {t.reasonLabel}
                   </div>
                   <p style={{ fontSize: '0.9rem', color: '#1F2937', lineHeight: 1.5 }}>
                     {lang === 'ta' ? hazardItem.reason_ta : hazardItem.reason_en}
@@ -305,7 +286,7 @@ export default function RiskAnalysis({ t, lang, onOpenAlertModal, farmers = [] }
                   }}
                 >
                   <div style={{ fontSize: '0.8rem', fontWeight: 700, color: '#166534', marginBottom: '0.25rem' }}>
-                    {lang === 'ta' ? 'பரிந்துரைக்கப்படும் முன்னெச்சரிக்கை (Precaution):' : 'Precautionary Guidance:'}
+                    {t.precautionLabel}
                   </div>
                   <p style={{ fontSize: '0.88rem', color: '#1F2937', lineHeight: 1.5 }}>
                     {lang === 'ta' ? hazardItem.precaution_ta : hazardItem.precaution_en}

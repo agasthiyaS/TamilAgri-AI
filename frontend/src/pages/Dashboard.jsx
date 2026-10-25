@@ -19,6 +19,14 @@ import StatCard from '../components/StatCard';
 import RiskBadge from '../components/RiskBadge';
 import WeatherCard from '../components/WeatherCard';
 import { api } from '../api';
+import {
+  translateLocation,
+  translateGrowthStage,
+  translateHazard,
+  translateStatus,
+  translateCrop,
+  LOCATIONS,
+} from '../i18n/translations';
 
 export default function Dashboard({ t, lang, setActiveTab, onOpenAlertModal }) {
   const [farmers, setFarmers] = useState([]);
@@ -102,25 +110,25 @@ export default function Dashboard({ t, lang, setActiveTab, onOpenAlertModal }) {
           title={t.statFarmers}
           value={farmers.length}
           icon={Users}
-          badgeText="Active in SQLite"
+          badgeText={t.statFarmersBadge}
         />
         <StatCard
           title={t.statHighRisk}
           value={riskAssessment?.overall_risk === 'High' ? 1 : 0}
           icon={AlertTriangle}
-          badgeText="Flowering Submergence Hazard"
+          badgeText={t.statHighRiskBadge}
         />
         <StatCard
           title={t.statAlertsSent}
           value={alerts.length}
           icon={Send}
-          badgeText="Simulated + Logged"
+          badgeText={t.statAlertsBadge}
         />
         <StatCard
           title={t.statActiveCrop}
           value={t.paddyCrop}
           icon={Sprout}
-          badgeText="5 Growth Stages Configured"
+          badgeText={t.statCropBadge}
         />
       </div>
 
@@ -286,7 +294,7 @@ export default function Dashboard({ t, lang, setActiveTab, onOpenAlertModal }) {
                   {monitoringSummary.alerts_sent}
                 </div>
                 <div style={{ fontSize: '0.7rem', color: '#64748B', marginTop: '0.35rem' }}>
-                  Live gateway dispatches
+                  {t.liveDispatchesSubtext}
                 </div>
               </div>
 
@@ -300,7 +308,7 @@ export default function Dashboard({ t, lang, setActiveTab, onOpenAlertModal }) {
                   {monitoringSummary.duplicates_suppressed}
                 </div>
                 <div style={{ fontSize: '0.7rem', color: '#64748B', marginTop: '0.35rem' }}>
-                  24-hour guard active
+                  {t.guardActiveSubtext}
                 </div>
               </div>
 
@@ -334,11 +342,11 @@ export default function Dashboard({ t, lang, setActiveTab, onOpenAlertModal }) {
               value={selectedLocation}
               onChange={(e) => setSelectedLocation(e.target.value)}
             >
-              <option value="Thanjavur">Thanjavur (Delta Hub)</option>
-              <option value="Madurai">Madurai (Southern)</option>
-              <option value="Tiruchirappalli">Tiruchirappalli</option>
-              <option value="Thiruvarur">Thiruvarur</option>
-              <option value="Coimbatore">Coimbatore</option>
+              {Object.keys(LOCATIONS).map((locKey) => (
+                <option key={locKey} value={locKey}>
+                  {translateLocation(locKey, lang)}
+                </option>
+              ))}
             </select>
           </div>
 
@@ -349,7 +357,7 @@ export default function Dashboard({ t, lang, setActiveTab, onOpenAlertModal }) {
           {forecast?.daily_forecasts && (
             <div className="forecast-strip">
               {forecast.daily_forecasts.map((day) => (
-                <WeatherCard key={day.date} day={day} />
+                <WeatherCard key={day.date} day={day} lang={lang} />
               ))}
             </div>
           )}
@@ -368,11 +376,10 @@ export default function Dashboard({ t, lang, setActiveTab, onOpenAlertModal }) {
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div>
                   <span style={{ fontSize: '0.8rem', color: 'var(--text-dim)' }}>
-                    {t.paddyCrop} (
-                    {lang === 'ta' ? 'பூக்கும் பருவம்' : 'Flowering Stage'})
+                    {t.paddyCrop} ({translateGrowthStage('Flowering', lang)})
                   </span>
                   <div style={{ fontWeight: 600, fontSize: '1.05rem', color: 'var(--text-main)', marginTop: '0.2rem' }}>
-                    {selectedLocation} Risk Assessment
+                    {translateLocation(selectedLocation, lang)} {t.riskAssessmentTitle}
                   </div>
                 </div>
                 <RiskBadge level={riskAssessment.overall_risk} t={t} />
@@ -444,10 +451,10 @@ export default function Dashboard({ t, lang, setActiveTab, onOpenAlertModal }) {
                       <td>
                         <div style={{ fontWeight: 600 }}>{alert.farmer_name}</div>
                         <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)' }}>
-                          {alert.location} • {alert.growth_stage}
+                          {translateLocation(alert.location, lang)} • {translateGrowthStage(alert.growth_stage, lang)}
                         </div>
                       </td>
-                      <td>{alert.hazard}</td>
+                      <td>{translateHazard(alert.hazard, lang)}</td>
                       <td>
                         <RiskBadge level={alert.risk_level} t={t} showIcon={false} />
                       </td>
@@ -463,7 +470,7 @@ export default function Dashboard({ t, lang, setActiveTab, onOpenAlertModal }) {
                             fontWeight: 700,
                           }}
                         >
-                          {alert.status === 'SIMULATED' ? 'SIMULATED (Demo)' : alert.status}
+                          {translateStatus(alert.status, lang)}
                         </span>
                       </td>
                     </tr>
@@ -505,7 +512,7 @@ export default function Dashboard({ t, lang, setActiveTab, onOpenAlertModal }) {
                   <th>{t.cropType}</th>
                   <th>{t.growthStage}</th>
                   <th>{t.prefLang}</th>
-                  <th>Action</th>
+                  <th>{t.colActions}</th>
                 </tr>
               </thead>
               <tbody>
@@ -513,10 +520,10 @@ export default function Dashboard({ t, lang, setActiveTab, onOpenAlertModal }) {
                   <tr key={f.id}>
                     <td style={{ fontWeight: 600 }}>{f.name}</td>
                     <td style={{ fontFamily: 'monospace' }}>{f.mobile_number}</td>
-                    <td>{f.location}</td>
-                    <td>{f.crop}</td>
+                    <td>{translateLocation(f.location, lang)}</td>
+                    <td>{translateCrop(f.crop, lang)}</td>
                     <td>
-                      <span style={{ color: '#0F766E', fontWeight: 600 }}>{f.growth_stage}</span>
+                      <span style={{ color: '#0F766E', fontWeight: 600 }}>{translateGrowthStage(f.growth_stage, lang)}</span>
                     </td>
                     <td>
                       <span className="demo-pill" style={{ textTransform: 'uppercase' }}>
@@ -534,7 +541,7 @@ export default function Dashboard({ t, lang, setActiveTab, onOpenAlertModal }) {
                           })
                         }
                       >
-                        <Send size={12} /> SMS
+                        <Send size={12} /> {lang === 'ta' ? 'SMS அனுப்பு' : 'SMS'}
                       </button>
                     </td>
                   </tr>

@@ -1,21 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { UserPlus, Users, Trash2, Send, CheckCircle2, AlertCircle } from 'lucide-react';
 import { api } from '../api';
-
-const TN_DISTRICTS = [
-  'Thanjavur',
-  'Madurai',
-  'Tiruchirappalli',
-  'Thiruvarur',
-  'Nagapattinam',
-  'Coimbatore',
-  'Cuddalore',
-  'Salem',
-  'Tirunelveli',
-  'Villupuram',
-];
-
-const STAGES = ['Nursery', 'Tillering', 'Flowering', 'Grain filling', 'Harvest'];
+import {
+  translateLocation,
+  translateGrowthStage,
+  translateCrop,
+  LOCATIONS,
+  GROWTH_STAGES,
+} from '../i18n/translations';
 
 export default function FarmerRegistration({ t, lang, onOpenAlertModal, onFarmerUpdated }) {
   const [farmers, setFarmers] = useState([]);
@@ -40,7 +32,7 @@ export default function FarmerRegistration({ t, lang, onOpenAlertModal, onFarmer
       setFarmers(data);
       if (onFarmerUpdated) onFarmerUpdated(data);
     } catch (err) {
-      setError('Could not load farmers list.');
+      setError(t.farmerLoadError);
     } finally {
       setLoading(false);
     }
@@ -75,13 +67,13 @@ export default function FarmerRegistration({ t, lang, onOpenAlertModal, onFarmer
         preferred_language: preferredLanguage,
       });
 
-      setSuccess(`Farmer '${name.trim()}' successfully registered!`);
+      setSuccess(t.farmerRegisteredSuccess);
       setName('');
       setMobile('');
       setCustomLoc('');
       await fetchFarmers();
     } catch (err) {
-      setError(err.message || 'Registration failed');
+      setError(err.message || t.errorMsg);
     } finally {
       setSubmitting(false);
     }
@@ -93,7 +85,7 @@ export default function FarmerRegistration({ t, lang, onOpenAlertModal, onFarmer
       await api.deleteFarmer(id);
       await fetchFarmers();
     } catch (err) {
-      setError(err.message || 'Failed to remove farmer profile');
+      setError(err.message || t.farmerDeleteError);
     }
   };
 
@@ -133,7 +125,7 @@ export default function FarmerRegistration({ t, lang, onOpenAlertModal, onFarmer
                 type="text"
                 className="form-input"
                 required
-                placeholder="e.g., K. Selvakumar / கே. செல்வக்குமார்"
+                placeholder={t.namePlaceholder}
                 value={name}
                 onChange={(e) => setName(e.target.value)}
               />
@@ -163,16 +155,16 @@ export default function FarmerRegistration({ t, lang, onOpenAlertModal, onFarmer
                   setCustomLoc('');
                 }}
               >
-                {TN_DISTRICTS.map((d) => (
+                {Object.keys(LOCATIONS).map((d) => (
                   <option key={d} value={d}>
-                    {d}
+                    {translateLocation(d, lang)}
                   </option>
                 ))}
               </select>
               <input
                 type="text"
                 className="form-input"
-                placeholder="Or specify village/taluk (e.g. Kumbakonam, Thanjavur)"
+                placeholder={t.selectVillagePlaceholder}
                 value={customLoc}
                 onChange={(e) => setCustomLoc(e.target.value)}
               />
@@ -193,9 +185,9 @@ export default function FarmerRegistration({ t, lang, onOpenAlertModal, onFarmer
                   value={growthStage}
                   onChange={(e) => setGrowthStage(e.target.value)}
                 >
-                  {STAGES.map((s) => (
+                  {Object.keys(GROWTH_STAGES).map((s) => (
                     <option key={s} value={s}>
-                      {s}
+                      {translateGrowthStage(s, lang)}
                     </option>
                   ))}
                 </select>
@@ -245,7 +237,7 @@ export default function FarmerRegistration({ t, lang, onOpenAlertModal, onFarmer
           </h2>
 
           {loading ? (
-            <div style={{ padding: '2rem', textAlign: 'center', color: 'var(--text-dim)' }}>Loading...</div>
+            <div style={{ padding: '2rem', textAlign: 'center', color: 'var(--text-dim)' }}>{t.loadingFarmers}</div>
           ) : farmers.length === 0 ? (
             <div style={{ padding: '2rem', textAlign: 'center', color: 'var(--text-dim)' }}>{t.noFarmersYet}</div>
           ) : (
@@ -256,7 +248,7 @@ export default function FarmerRegistration({ t, lang, onOpenAlertModal, onFarmer
                     <th>{t.farmerName}</th>
                     <th>{t.locationDistrict}</th>
                     <th>{t.growthStage}</th>
-                    <th>Actions</th>
+                    <th>{t.colActions}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -268,15 +260,17 @@ export default function FarmerRegistration({ t, lang, onOpenAlertModal, onFarmer
                           {farmer.mobile_number} • {farmer.preferred_language === 'ta' ? 'தமிழ்' : 'EN'}
                         </div>
                       </td>
-                      <td>{farmer.location}</td>
+                      <td>{translateLocation(farmer.location, lang)}</td>
                       <td>
-                        <span style={{ color: '#0F766E', fontSize: '0.85rem', fontWeight: 600 }}>{farmer.growth_stage}</span>
+                        <span style={{ color: '#0F766E', fontSize: '0.85rem', fontWeight: 600 }}>
+                          {translateGrowthStage(farmer.growth_stage, lang)}
+                        </span>
                       </td>
                       <td>
                         <div style={{ display: 'flex', gap: '0.5rem' }}>
                           <button
                             className="btn btn-outline btn-sm"
-                            title="Dispatch SMS early warning"
+                            title={lang === 'ta' ? 'முன்னெச்சரிக்கை SMS அனுப்பு' : 'Dispatch SMS early warning'}
                             onClick={() =>
                               onOpenAlertModal({
                                 initialFarmerId: farmer.id,
@@ -289,7 +283,7 @@ export default function FarmerRegistration({ t, lang, onOpenAlertModal, onFarmer
                           </button>
                           <button
                             className="btn btn-danger btn-sm"
-                            title="Delete profile"
+                            title={lang === 'ta' ? 'விவரத்தை நீக்கு' : 'Delete profile'}
                             onClick={() => handleDelete(farmer.id)}
                           >
                             <Trash2 size={13} />

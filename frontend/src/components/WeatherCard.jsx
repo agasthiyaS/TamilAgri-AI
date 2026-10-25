@@ -1,7 +1,8 @@
 import React from 'react';
 import { CloudRain, Sun, Cloud, Thermometer } from 'lucide-react';
+import { translateWeatherCondition } from '../i18n/translations';
 
-export default function WeatherCard({ day }) {
+export default function WeatherCard({ day, lang = 'ta' }) {
   const isRainy = day.rainfall_mm > 5.0;
   const isHot = day.temp_max_c > 38.0;
 
@@ -18,7 +19,7 @@ export default function WeatherCard({ day }) {
         <CloudRain size={12} />
         <span>{day.rainfall_mm} mm</span>
       </div>
-      <div className="forecast-cond">{day.weather_condition}</div>
+      <div className="forecast-cond">{translateWeatherCondition(day.weather_condition, lang)}</div>
     </div>
   );
 }
