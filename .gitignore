@@ -6,6 +6,8 @@ __pycache__/
 
 # Environments
 .env
+.env.*
+!.env.example
 .venv/
 env/
 venv/
@@ -13,13 +15,22 @@ ENV/
 env.bak/
 venv.bak/
 
+# Testing & Cache
+.pytest_cache/
+.coverage
+htmlcov/
+
 # Database
 *.sqlite3
+*.sqlite
 *.db
+tamilagri.db
 
 # Node dependencies and build
 node_modules/
+frontend/node_modules/
 dist/
+frontend/dist/
 dist-ssr/
 *.local
 
