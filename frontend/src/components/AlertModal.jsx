@@ -123,7 +123,7 @@ export default function AlertModal({
 
           {/* Live SMS Preview */}
           <div className="form-group">
-            <label className="form-label" style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: 'var(--primary-400)' }}>
+            <label className="form-label" style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#166534' }}>
               <MessageSquare size={14} />
               {currentFarmer?.preferred_language === 'ta'
                 ? 'தமிழ் SMS முன்னோட்டம் (Tamil SMS Preview)'
@@ -131,15 +131,15 @@ export default function AlertModal({
             </label>
             <div
               style={{
-                background: 'rgba(6, 23, 18, 0.85)',
-                border: '1px solid var(--border-subtle)',
+                background: '#F8FAFC',
+                border: '1px solid #E2E8F0',
                 borderRadius: 'var(--radius-sm)',
-                padding: '0.85rem',
-                fontSize: '0.82rem',
+                padding: '0.95rem',
+                fontSize: '0.85rem',
                 fontFamily: 'monospace',
                 whiteSpace: 'pre-wrap',
-                lineHeight: 1.5,
-                color: '#e2e8f0',
+                lineHeight: 1.55,
+                color: '#1F2937',
               }}
             >
               {customMessage.trim() ? customMessage : previewSMS || 'Generating template preview...'}
@@ -152,9 +152,9 @@ export default function AlertModal({
               id="forceResend"
               checked={forceResend}
               onChange={(e) => setForceResend(e.target.checked)}
-              style={{ width: '16px', height: '16px', accentColor: 'var(--primary-500)' }}
+              style={{ width: '16px', height: '16px', accentColor: '#166534' }}
             />
-            <label htmlFor="forceResend" style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', cursor: 'pointer' }}>
+            <label htmlFor="forceResend" style={{ fontSize: '0.85rem', color: '#64748B', cursor: 'pointer' }}>
               {t.forceResendLabel}
             </label>
           </div>

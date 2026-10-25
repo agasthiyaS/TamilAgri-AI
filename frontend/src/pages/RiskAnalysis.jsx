@@ -105,7 +105,7 @@ export default function RiskAnalysis({ t, lang, onOpenAlertModal, farmers = [] }
       </div>
 
       {error && (
-        <div style={{ padding: '1rem', background: 'rgba(239, 68, 68, 0.2)', border: '1px solid #ef4444', borderRadius: '8px', color: '#fca5a5', marginBottom: '1.5rem' }}>
+        <div style={{ padding: '0.9rem 1.25rem', background: '#FEE2E2', border: '1px solid #FCA5A5', borderRadius: '8px', color: '#991B1B', fontWeight: 500, marginBottom: '1.5rem' }}>
           {error}
         </div>
       )}
@@ -195,14 +195,14 @@ export default function RiskAnalysis({ t, lang, onOpenAlertModal, farmers = [] }
 
       {/* Risk Results Breakdown */}
       {riskResult && (
-        <div className="card" style={{ borderLeft: `6px solid ${riskResult.overall_risk === 'High' ? '#ef4444' : riskResult.overall_risk === 'Medium' ? '#f59e0b' : '#10b981'}` }}>
+        <div className="card" style={{ borderLeft: `6px solid ${riskResult.overall_risk === 'High' ? '#DC2626' : riskResult.overall_risk === 'Medium' ? '#D97706' : '#166534'}` }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', marginBottom: '1.5rem' }}>
             <div>
-              <span style={{ fontSize: '0.85rem', color: 'var(--text-dim)' }}>
+              <span style={{ fontSize: '0.85rem', color: '#64748B' }}>
                 {t.overallRiskLevel} for {activeLocation}
               </span>
               <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginTop: '0.25rem' }}>
-                <span style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--text-main)' }}>
+                <span style={{ fontSize: '1.5rem', fontWeight: 700, color: '#1F2937' }}>
                   {riskResult.crop} • {lang === 'ta' ? PADDY_STAGES.find((s) => s.id === stage)?.ta : stage}
                 </span>
                 <RiskBadge level={riskResult.overall_risk} t={t} />
@@ -229,10 +229,10 @@ export default function RiskAnalysis({ t, lang, onOpenAlertModal, farmers = [] }
           {warningReport && (
             <div
               style={{
-                background: 'rgba(5, 150, 105, 0.12)',
-                border: '1px solid rgba(16, 185, 129, 0.35)',
+                background: '#E8F3E8',
+                border: '1px solid #A7F3D0',
                 borderRadius: 'var(--radius-sm)',
-                padding: '1rem 1.25rem',
+                padding: '1.1rem 1.35rem',
                 marginBottom: '1.5rem',
               }}
             >
@@ -242,19 +242,19 @@ export default function RiskAnalysis({ t, lang, onOpenAlertModal, farmers = [] }
                   alignItems: 'center',
                   gap: '0.5rem',
                   marginBottom: '0.4rem',
-                  color: 'var(--primary-400)',
-                  fontWeight: 600,
+                  color: '#166534',
+                  fontWeight: 700,
                   fontSize: '0.9rem',
                 }}
               >
-                <Languages size={18} />
+                <Languages size={18} color="#166534" />
                 <span>
                   {lang === 'ta'
                     ? 'தமிழ் அக்ரி AI வேளாண் ஆலோசனை (Language Intelligence)'
                     : 'TamilAgri AI Climate Advisory (Language Intelligence)'}
                 </span>
               </div>
-              <p style={{ fontSize: '1rem', color: 'var(--text-main)', lineHeight: 1.6, fontWeight: 500 }}>
+              <p style={{ fontSize: '1rem', color: '#1F2937', lineHeight: 1.6, fontWeight: 500 }}>
                 {warningReport.warning_text}
               </p>
             </div>
@@ -266,14 +266,14 @@ export default function RiskAnalysis({ t, lang, onOpenAlertModal, farmers = [] }
               <div
                 key={hazardItem.hazard}
                 style={{
-                  background: 'var(--bg-surface-elevated)',
-                  border: '1px solid var(--border-subtle)',
+                  background: '#F8FAFC',
+                  border: '1px solid #E2E8F0',
                   borderRadius: 'var(--radius-sm)',
                   padding: '1.25rem',
                 }}
               >
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
-                  <div style={{ fontWeight: 700, fontSize: '1.1rem', color: 'var(--text-main)' }}>
+                  <div style={{ fontWeight: 700, fontSize: '1.1rem', color: '#1F2937' }}>
                     {lang === 'ta' && hazardItem.hazard === 'Heavy Rainfall'
                       ? 'கனமழை இடர்பாடு'
                       : lang === 'ta' && hazardItem.hazard === 'Extreme Heat'
@@ -283,31 +283,31 @@ export default function RiskAnalysis({ t, lang, onOpenAlertModal, farmers = [] }
                   <RiskBadge level={hazardItem.risk_level} t={t} />
                 </div>
 
-                <div style={{ fontSize: '0.8rem', color: 'var(--text-dim)', marginBottom: '0.75rem', fontFamily: 'monospace' }}>
+                <div style={{ fontSize: '0.8rem', color: '#64748B', marginBottom: '0.75rem', fontFamily: 'monospace' }}>
                   {hazardItem.trigger_value} | Threshold: {hazardItem.threshold_info}
                 </div>
 
                 <div style={{ marginBottom: '1rem' }}>
-                  <div style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '0.25rem' }}>
+                  <div style={{ fontSize: '0.8rem', fontWeight: 600, color: '#475569', marginBottom: '0.25rem' }}>
                     {lang === 'ta' ? 'காரணம் (Reason):' : 'Risk Explanation:'}
                   </div>
-                  <p style={{ fontSize: '0.9rem', color: 'var(--text-main)' }}>
+                  <p style={{ fontSize: '0.9rem', color: '#1F2937', lineHeight: 1.5 }}>
                     {lang === 'ta' ? hazardItem.reason_ta : hazardItem.reason_en}
                   </p>
                 </div>
 
                 <div
                   style={{
-                    background: 'rgba(6, 23, 18, 0.6)',
-                    borderLeft: '3px solid var(--primary-500)',
-                    padding: '0.75rem 1rem',
+                    background: '#E8F3E8',
+                    borderLeft: '4px solid #166534',
+                    padding: '0.85rem 1rem',
                     borderRadius: '0 6px 6px 0',
                   }}
                 >
-                  <div style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--primary-400)', marginBottom: '0.2rem' }}>
+                  <div style={{ fontSize: '0.8rem', fontWeight: 700, color: '#166534', marginBottom: '0.25rem' }}>
                     {lang === 'ta' ? 'பரிந்துரைக்கப்படும் முன்னெச்சரிக்கை (Precaution):' : 'Precautionary Guidance:'}
                   </div>
-                  <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)' }}>
+                  <p style={{ fontSize: '0.88rem', color: '#1F2937', lineHeight: 1.5 }}>
                     {lang === 'ta' ? hazardItem.precaution_ta : hazardItem.precaution_en}
                   </p>
                 </div>

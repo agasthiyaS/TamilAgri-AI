@@ -115,14 +115,14 @@ export default function FarmerRegistration({ t, lang, onOpenAlertModal, onFarmer
           </h2>
 
           {error && (
-            <div style={{ padding: '0.75rem 1rem', background: 'rgba(239, 68, 68, 0.2)', border: '1px solid #ef4444', borderRadius: '8px', color: '#fca5a5', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem' }}>
-              <AlertCircle size={16} /> {error}
+            <div style={{ padding: '0.85rem 1rem', background: '#FEE2E2', border: '1px solid #FCA5A5', borderRadius: '8px', color: '#991B1B', fontWeight: 500, marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem' }}>
+              <AlertCircle size={16} color="#991B1B" /> {error}
             </div>
           )}
 
           {success && (
-            <div style={{ padding: '0.75rem 1rem', background: 'rgba(16, 185, 129, 0.2)', border: '1px solid #10b981', borderRadius: '8px', color: '#6ee7b7', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem' }}>
-              <CheckCircle2 size={16} /> {success}
+            <div style={{ padding: '0.85rem 1rem', background: '#DCFCE7', border: '1px solid #86EFAC', borderRadius: '8px', color: '#166534', fontWeight: 500, marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem' }}>
+              <CheckCircle2 size={16} color="#166534" /> {success}
             </div>
           )}
 
@@ -270,7 +270,7 @@ export default function FarmerRegistration({ t, lang, onOpenAlertModal, onFarmer
                       </td>
                       <td>{farmer.location}</td>
                       <td>
-                        <span style={{ color: 'var(--primary-400)', fontSize: '0.85rem' }}>{farmer.growth_stage}</span>
+                        <span style={{ color: '#0F766E', fontSize: '0.85rem', fontWeight: 600 }}>{farmer.growth_stage}</span>
                       </td>
                       <td>
                         <div style={{ display: 'flex', gap: '0.5rem' }}>

@@ -166,27 +166,34 @@ export default function AlertHistory({ t, lang }) {
                       <span
                         style={{
                           fontSize: '0.75rem',
-                          padding: '0.25rem 0.5rem',
+                          padding: '0.25rem 0.55rem',
                           borderRadius: '4px',
                           background:
                             alert.status === 'SIMULATED'
-                              ? 'rgba(245, 158, 11, 0.15)'
+                              ? '#FEF3C7'
                               : alert.status === 'DELIVERED'
-                              ? 'rgba(16, 185, 129, 0.15)'
-                              : 'rgba(239, 68, 68, 0.15)',
+                              ? '#DCFCE7'
+                              : '#FEE2E2',
+                          border: `1px solid ${
+                            alert.status === 'SIMULATED'
+                              ? '#FCD34D'
+                              : alert.status === 'DELIVERED'
+                              ? '#86EFAC'
+                              : '#FCA5A5'
+                          }`,
                           color:
                             alert.status === 'SIMULATED'
-                              ? '#f59e0b'
+                              ? '#92400E'
                               : alert.status === 'DELIVERED'
-                              ? '#10b981'
-                              : '#ef4444',
+                              ? '#166534'
+                              : '#991B1B',
                           fontWeight: 700,
                         }}
                       >
                         {alert.status}
                       </span>
                     </td>
-                    <td style={{ fontSize: '0.8rem', color: 'var(--text-dim)' }}>
+                    <td style={{ fontSize: '0.8rem', color: '#64748B' }}>
                       {formatDate(alert.sent_at)}
                     </td>
                     <td>
@@ -211,33 +218,33 @@ export default function AlertHistory({ t, lang }) {
         <div className="modal-overlay">
           <div className="modal-content" style={{ maxWidth: '520px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
-              <h3 style={{ fontSize: '1.2rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <MessageSquare size={18} color="var(--primary-400)" />
+              <h3 style={{ fontSize: '1.2rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#1F2937' }}>
+                <MessageSquare size={18} color="#166534" />
                 SMS Payload Details (Alert #{selectedAlert.id})
               </h3>
               <button
                 onClick={() => setSelectedAlert(null)}
-                style={{ background: 'none', border: 'none', color: 'var(--text-dim)', cursor: 'pointer' }}
+                style={{ background: 'none', border: 'none', color: '#64748B', cursor: 'pointer' }}
               >
                 <X size={20} />
               </button>
             </div>
 
-            <div style={{ marginBottom: '1rem', fontSize: '0.85rem', color: 'var(--text-dim)' }}>
-              Recipient: <strong style={{ color: 'var(--text-main)' }}>{selectedAlert.farmer_name}</strong> ({selectedAlert.mobile_number}) • Gateway: <code>{selectedAlert.provider}</code> (ID: {selectedAlert.provider_message_id || 'N/A'})
+            <div style={{ marginBottom: '1rem', fontSize: '0.85rem', color: '#64748B' }}>
+              Recipient: <strong style={{ color: '#1F2937' }}>{selectedAlert.farmer_name}</strong> ({selectedAlert.mobile_number}) • Gateway: <code>{selectedAlert.provider}</code> (ID: {selectedAlert.provider_message_id || 'N/A'})
             </div>
 
             <div
               style={{
-                background: 'rgba(6, 23, 18, 0.85)',
-                border: '1px solid var(--border-subtle)',
+                background: '#F8FAFC',
+                border: '1px solid #E2E8F0',
                 borderRadius: 'var(--radius-sm)',
                 padding: '1.25rem',
                 fontFamily: 'monospace',
                 fontSize: '0.9rem',
                 whiteSpace: 'pre-wrap',
                 lineHeight: 1.6,
-                color: '#e2e8f0',
+                color: '#1F2937',
               }}
             >
               {selectedAlert.message}

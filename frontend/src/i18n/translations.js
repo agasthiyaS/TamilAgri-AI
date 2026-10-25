@@ -24,6 +24,24 @@ export const translations = {
     noFarmersYet: "No farmers registered yet.",
     viewAllFarmers: "View All Farmers",
     viewAllAlerts: "View Full Audit History",
+
+    // Weather Risk Monitoring
+    runWeatherMonitoring: "Run Weather Monitoring",
+    monitoringInProgress: "Monitoring Weather & Risks...",
+    monitoringComplete: "Weather risk-monitoring cycle completed successfully.",
+    monitoringConflict: "Another monitoring cycle is already in progress. Please wait for it to complete.",
+    monitoringError: "Failed to execute weather monitoring. Please check the backend connection.",
+    monitoringCardTitle: "Automatic Weather Risk Monitoring",
+    monitoringCardSubtitle: "Periodically evaluate forecasts for registered farmers, apply crop growth stage thresholds, and trigger multilingual warnings.",
+    summaryFarmersChecked: "Farmers Checked",
+    summaryRisksDetected: "Risks Detected",
+    summaryAlertsSimulated: "Simulated SMS Alerts",
+    summaryAlertsSent: "Genuinely Sent Alerts",
+    summaryDuplicatesSuppressed: "Duplicate Alerts Suppressed",
+    summaryFailures: "Failures",
+    demoOnlyBadge: "Demo only — not delivered",
+    lastRunAt: "Last Monitored",
+    viewAllDispatches: "View All Dispatches",
     
     // Risk Analysis Page
     riskTitle: "Crop-Specific Climate Risk Evaluator",
@@ -135,6 +153,24 @@ export const translations = {
     noFarmersYet: "விவசாயிகள் யாரும் இன்னும் பதிவு செய்யப்படவில்லை.",
     viewAllFarmers: "அனைத்து விவசாயிகளையும் காண்க",
     viewAllAlerts: "முழு வரலாற்றுப் பதிவை காண்க",
+
+    // Weather Risk Monitoring
+    runWeatherMonitoring: "வானிலை இடர் கண்காணிப்பை இயக்கு",
+    monitoringInProgress: "வானிலை & இடர்கள் கண்காணிக்கப்படுகிறது...",
+    monitoringComplete: "வானிலை இடர் கண்காணிப்பு வெற்றிகரமாக முடிந்தது.",
+    monitoringConflict: "மற்றொரு கண்காணிப்பு சுழற்சி தற்போது இயங்குகிறது. சிறிது நேரம் காத்திருக்கவும்.",
+    monitoringError: "வானிலை கண்காணிப்பை இயக்க முடியவில்லை. சேவையக இணைப்பை சரிபார்க்கவும்.",
+    monitoringCardTitle: "தானியங்கி வானிலை இடர் கண்காணிப்பு",
+    monitoringCardSubtitle: "பதிவுசெய்த விவசாயிகளின் இருப்பிட வானிலையை ஆய்வு செய்து, பயிர் வளர்ச்சி நிலைக்கு ஏற்ப SMS எச்சரிக்கைகளை உருவாக்குகிறது.",
+    summaryFarmersChecked: "ஆய்வு செய்யப்பட்ட விவசாயிகள்",
+    summaryRisksDetected: "கண்டறியப்பட்ட இடர்கள்",
+    summaryAlertsSimulated: "மாதிரி SMS எச்சரிக்கைகள்",
+    summaryAlertsSent: "உண்மையாக அனுப்பப்பட்டவை",
+    summaryDuplicatesSuppressed: "தடுக்கப்பட்ட நகல் எச்சரிக்கைகள்",
+    summaryFailures: "தோல்விகள்",
+    demoOnlyBadge: "மாதிரி மட்டுமே — அனுப்பப்படவில்லை",
+    lastRunAt: "கடைசியாக கண்காணிக்கப்பட்டது",
+    viewAllDispatches: "அனைத்து பதிவுகளையும் காண்க",
     
     // Risk Analysis Page
     riskTitle: "பயிர் சார்ந்த காலநிலை இடர் மதிப்பீட்டாளர்",
