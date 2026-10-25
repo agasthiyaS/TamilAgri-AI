@@ -39,4 +39,8 @@ class Settings:
     TWILIO_FROM_NUMBER: str = os.getenv("TWILIO_FROM_NUMBER", "")
     SMS_WEBHOOK_URL: str = os.getenv("SMS_WEBHOOK_URL", "")
 
+    # Scheduler settings (disabled by default for safety and test isolation)
+    SCHEDULER_ENABLED: bool = os.getenv("SCHEDULER_ENABLED", "false").lower() in ("true", "1", "yes")
+    SCHEDULER_INTERVAL_MINUTES: int = int(os.getenv("SCHEDULER_INTERVAL_MINUTES", "60"))
+
 settings = Settings()
