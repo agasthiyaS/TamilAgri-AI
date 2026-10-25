@@ -1,5 +1,14 @@
+import sys
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
+
+# Ensure Windows terminal handles Tamil unicode characters without charmap errors
+if hasattr(sys.stdout, "reconfigure"):
+    try:
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+        sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
 from fastapi.middleware.cors import CORSMiddleware
 from .config import settings
 from .database import init_db, SessionLocal

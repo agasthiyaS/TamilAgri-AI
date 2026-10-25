@@ -33,9 +33,13 @@ class DemoSMSProvider(BaseSMSProvider):
     """
     async def send_sms(self, to_number: str, message: str) -> SMSDeliveryResult:
         simulated_id = f"SIM-{uuid.uuid4().hex[:10].upper()}"
-        print(f"\n[DEMO SMS GATEWAY] Message queued for {to_number}:")
-        print(f"ID: {simulated_id}")
-        print(f"Content:\n{message}\n" + "-"*50)
+        try:
+            print(f"\n[DEMO SMS GATEWAY] Message queued for {to_number}:")
+            print(f"ID: {simulated_id}")
+            print(f"Content:\n{message}\n" + "-"*50)
+        except Exception:
+            # Fallback for Windows consoles with restrictive code pages (cp1252)
+            print(f"[DEMO SMS GATEWAY] Message queued for {to_number} (ID: {simulated_id}) [Tamil unicode text]")
         
         return SMSDeliveryResult(
             success=True,
