@@ -10,7 +10,18 @@ export default function StatCard({ title, value, icon: Icon, badgeText, badgeTyp
         <div className="stat-value">{value}</div>
         <div className="stat-label">{title}</div>
         {badgeText && (
-          <span style={{ fontSize: '0.75rem', color: 'var(--primary-400)', marginTop: '0.25rem', display: 'inline-block' }}>
+          <span
+            style={{
+              fontSize: '0.72rem',
+              fontWeight: 600,
+              color: '#166534',
+              background: '#E8F3E8',
+              padding: '0.15rem 0.5rem',
+              borderRadius: '9999px',
+              marginTop: '0.35rem',
+              display: 'inline-block',
+            }}
+          >
             {badgeText}
           </span>
         )}

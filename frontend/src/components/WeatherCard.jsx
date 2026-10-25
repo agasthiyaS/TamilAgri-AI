@@ -8,7 +8,7 @@ export default function WeatherCard({ day }) {
   return (
     <div className="forecast-day-card">
       <div className="forecast-date">{day.date}</div>
-      <div style={{ margin: '0.4rem 0', color: isHot ? '#f59e0b' : isRainy ? '#60a5fa' : '#34d399' }}>
+      <div style={{ margin: '0.4rem 0', color: isHot ? '#D97706' : isRainy ? '#0F766E' : '#166534' }}>
         {isRainy ? <CloudRain size={24} /> : isHot ? <Sun size={24} /> : <Cloud size={24} />}
       </div>
       <div className="forecast-temp">

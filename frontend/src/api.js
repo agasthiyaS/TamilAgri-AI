@@ -9,7 +9,9 @@ async function handleResponse(response) {
     } catch {
       errorDetail = await response.text();
     }
-    throw new Error(errorDetail || `HTTP Error ${response.status}`);
+    const err = new Error(errorDetail || `HTTP Error ${response.status}`);
+    err.status = response.status;
+    throw err;
   }
   if (response.status === 204) return null;
   return response.json();
@@ -18,6 +20,11 @@ async function handleResponse(response) {
 export const api = {
   getHealth: () => fetch(`${API_BASE}/health`).then(handleResponse),
   getSettings: () => fetch(`${API_BASE}/settings`).then(handleResponse),
+  runMonitoring: () =>
+    fetch(`${API_BASE}/monitoring/run-now`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+    }).then(handleResponse),
   
   // Farmers
   getFarmers: () => fetch(`${API_BASE}/farmers`).then(handleResponse),
