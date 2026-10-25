@@ -3,11 +3,13 @@ from .weather import DailyForecast, WeatherForecastResponse
 from .risk import RiskAnalysisRequest, HazardAssessment, RiskAnalysisResult
 from .alert import AlertTriggerRequest, BroadcastAlertRequest, AlertResponse
 from .language import WarningGenerationRequest, WarningGenerationResponse
+from .monitoring import MonitoringCycleSummary
 
 __all__ = [
     "FarmerBase", "FarmerCreate", "FarmerResponse",
     "DailyForecast", "WeatherForecastResponse",
     "RiskAnalysisRequest", "HazardAssessment", "RiskAnalysisResult",
     "AlertTriggerRequest", "BroadcastAlertRequest", "AlertResponse",
-    "WarningGenerationRequest", "WarningGenerationResponse"
+    "WarningGenerationRequest", "WarningGenerationResponse",
+    "MonitoringCycleSummary"
 ]

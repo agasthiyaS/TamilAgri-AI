@@ -5,6 +5,7 @@ from .risk import router as risk_router
 from .alerts import router as alerts_router
 from .settings import router as settings_router
 from .language import router as language_router
+from .monitoring import router as monitoring_router
 
 __all__ = [
     "health_router",
@@ -13,5 +14,6 @@ __all__ = [
     "risk_router",
     "alerts_router",
     "settings_router",
-    "language_router"
+    "language_router",
+    "monitoring_router"
 ]
