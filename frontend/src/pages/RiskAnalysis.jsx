@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { CloudSun, Send, ShieldAlert, AlertCircle, Info, CheckCircle2, ChevronRight } from 'lucide-react';
+import { CloudSun, Send, ShieldAlert, AlertCircle, Info, CheckCircle2, ChevronRight, Languages } from 'lucide-react';
 import RiskBadge from '../components/RiskBadge';
 import WeatherCard from '../components/WeatherCard';
 import { api } from '../api';
@@ -30,6 +30,7 @@ export default function RiskAnalysis({ t, lang, onOpenAlertModal, farmers = [] }
   const [stage, setStage] = useState('Flowering');
   const [forecast, setForecast] = useState(null);
   const [riskResult, setRiskResult] = useState(null);
+  const [warningReport, setWarningReport] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -59,6 +60,26 @@ export default function RiskAnalysis({ t, lang, onOpenAlertModal, farmers = [] }
   useEffect(() => {
     handleEvaluate();
   }, [location, stage]);
+
+  useEffect(() => {
+    if (riskResult) {
+      const primaryHazard = riskResult.hazards[0];
+      const precaution = lang === 'ta' ? primaryHazard?.precaution_ta : primaryHazard?.precaution_en;
+      api
+        .generateWarning({
+          crop: riskResult.crop,
+          growth_stage: riskResult.growth_stage,
+          hazard: primaryHazard?.hazard || 'Heavy Rainfall',
+          risk_level: riskResult.overall_risk,
+          language: lang,
+          trigger_value: primaryHazard?.trigger_value,
+          precaution: precaution,
+          location: activeLocation,
+        })
+        .then(setWarningReport)
+        .catch((err) => console.error('Failed to generate warning narrative:', err));
+    }
+  }, [riskResult, lang, activeLocation]);
 
   const matchingFarmers = farmers.filter(
     (f) =>
@@ -203,6 +224,41 @@ export default function RiskAnalysis({ t, lang, onOpenAlertModal, farmers = [] }
               {t.triggerWarningAlert} ({matchingFarmers.length} registered in area)
             </button>
           </div>
+
+          {/* Language Intelligence Narrative Advisory Banner */}
+          {warningReport && (
+            <div
+              style={{
+                background: 'rgba(5, 150, 105, 0.12)',
+                border: '1px solid rgba(16, 185, 129, 0.35)',
+                borderRadius: 'var(--radius-sm)',
+                padding: '1rem 1.25rem',
+                marginBottom: '1.5rem',
+              }}
+            >
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  marginBottom: '0.4rem',
+                  color: 'var(--primary-400)',
+                  fontWeight: 600,
+                  fontSize: '0.9rem',
+                }}
+              >
+                <Languages size={18} />
+                <span>
+                  {lang === 'ta'
+                    ? 'தமிழ் அக்ரி AI வேளாண் ஆலோசனை (Language Intelligence)'
+                    : 'TamilAgri AI Climate Advisory (Language Intelligence)'}
+                </span>
+              </div>
+              <p style={{ fontSize: '1rem', color: 'var(--text-main)', lineHeight: 1.6, fontWeight: 500 }}>
+                {warningReport.warning_text}
+              </p>
+            </div>
+          )}
 
           {/* Hazard Cards Grid */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.25rem' }}>

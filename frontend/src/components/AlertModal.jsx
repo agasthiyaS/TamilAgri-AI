@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
-import { Send, X, AlertTriangle, ShieldCheck } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Send, X, AlertTriangle, ShieldCheck, MessageSquare } from 'lucide-react';
 import RiskBadge from './RiskBadge';
+import { api } from '../api';
 
 export default function AlertModal({
   isOpen,
@@ -19,10 +20,29 @@ export default function AlertModal({
   );
   const [forceResend, setForceResend] = useState(false);
   const [customMessage, setCustomMessage] = useState('');
-
-  if (!isOpen) return null;
+  const [previewSMS, setPreviewSMS] = useState('');
 
   const currentFarmer = farmers.find((f) => String(f.id) === String(selectedFarmerId));
+
+  useEffect(() => {
+    if (currentFarmer) {
+      api
+        .generateWarning({
+          crop: currentFarmer.crop || 'Paddy',
+          growth_stage: currentFarmer.growth_stage || 'Flowering',
+          hazard,
+          risk_level: riskLevel,
+          language: currentFarmer.preferred_language || 'ta',
+          trigger_value: triggerValue,
+          farmer_name: currentFarmer.name,
+          location: currentFarmer.location,
+        })
+        .then((res) => setPreviewSMS(res.sms_text))
+        .catch((err) => console.error('Failed to preview SMS:', err));
+    }
+  }, [selectedFarmerId, hazard, riskLevel, triggerValue, currentFarmer]);
+
+  if (!isOpen) return null;
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -90,7 +110,7 @@ export default function AlertModal({
             </label>
             <textarea
               className="form-textarea"
-              rows="3"
+              rows="2"
               placeholder={
                 currentFarmer?.preferred_language === 'ta'
                   ? 'தானியங்கி தமிழ் மாதிரி செய்தி பயன்படுத்தப்படும்...'
@@ -99,6 +119,31 @@ export default function AlertModal({
               value={customMessage}
               onChange={(e) => setCustomMessage(e.target.value)}
             />
+          </div>
+
+          {/* Live SMS Preview */}
+          <div className="form-group">
+            <label className="form-label" style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: 'var(--primary-400)' }}>
+              <MessageSquare size={14} />
+              {currentFarmer?.preferred_language === 'ta'
+                ? 'தமிழ் SMS முன்னோட்டம் (Tamil SMS Preview)'
+                : 'English SMS Preview'}
+            </label>
+            <div
+              style={{
+                background: 'rgba(6, 23, 18, 0.85)',
+                border: '1px solid var(--border-subtle)',
+                borderRadius: 'var(--radius-sm)',
+                padding: '0.85rem',
+                fontSize: '0.82rem',
+                fontFamily: 'monospace',
+                whiteSpace: 'pre-wrap',
+                lineHeight: 1.5,
+                color: '#e2e8f0',
+              }}
+            >
+              {customMessage.trim() ? customMessage : previewSMS || 'Generating template preview...'}
+            </div>
           </div>
 
           <div className="form-group" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
