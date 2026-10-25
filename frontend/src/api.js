@@ -56,4 +56,14 @@ export const api = {
     const qs = query.toString();
     return fetch(`${API_BASE}/alerts/history${qs ? '?' + qs : ''}`).then(handleResponse);
   },
+
+  // Language Intelligence
+  generateWarning: (data) =>
+    fetch(`${API_BASE}/language/warning`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    }).then(handleResponse),
+  getLanguageTerms: () => fetch(`${API_BASE}/language/terms`).then(handleResponse),
+  getSupportedLanguages: () => fetch(`${API_BASE}/language/languages`).then(handleResponse),
 };

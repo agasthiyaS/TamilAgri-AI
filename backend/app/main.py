@@ -19,7 +19,8 @@ from .routes import (
     weather_router,
     risk_router,
     alerts_router,
-    settings_router
+    settings_router,
+    language_router
 )
 
 @asynccontextmanager
@@ -95,6 +96,7 @@ app.include_router(weather_router, prefix="/api")
 app.include_router(risk_router, prefix="/api")
 app.include_router(alerts_router, prefix="/api")
 app.include_router(settings_router, prefix="/api")
+app.include_router(language_router, prefix="/api")
 
 @app.get("/")
 def root():
