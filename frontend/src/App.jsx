@@ -142,13 +142,13 @@ export default function App() {
         <div
           className="toast"
           style={{
-            borderColor: toast.type === 'error' ? '#ef4444' : 'var(--primary-500)',
+            borderColor: toast.type === 'error' ? '#DC2626' : '#166534',
           }}
         >
           {toast.type === 'error' ? (
-            <AlertCircle size={20} color="#f87171" />
+            <AlertCircle size={20} color="#DC2626" />
           ) : (
-            <CheckCircle2 size={20} color="var(--primary-400)" />
+            <CheckCircle2 size={20} color="#166534" />
           )}
           <span>{toast.message}</span>
         </div>
@@ -157,11 +157,11 @@ export default function App() {
       {/* Footer */}
       <footer
         style={{
-          borderTop: '1px solid var(--border-subtle)',
+          borderTop: '1px solid #E2E8F0',
           padding: '2rem 1.5rem',
           textAlign: 'center',
           fontSize: '0.85rem',
-          color: 'var(--text-dim)',
+          color: '#CBD5E1',
           marginTop: '3rem',
         }}
       >

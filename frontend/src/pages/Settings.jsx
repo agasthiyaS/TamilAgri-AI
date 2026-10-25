@@ -27,48 +27,48 @@ export default function Settings({ t, lang, setLang, isDemo }) {
         {/* System & Adapter Status Card */}
         <div className="card">
           <h2 className="card-title">
-            <Cpu size={20} color="var(--primary-400)" />
+            <Cpu size={20} color="#166534" />
             {t.systemHealth}
           </h2>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: '0.75rem', borderBottom: '1px solid rgba(22, 101, 52, 0.2)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: '0.75rem', borderBottom: '1px solid #E2E8F0' }}>
               <div>
-                <div style={{ fontWeight: 600, color: 'var(--text-main)' }}>Operating Mode</div>
-                <div style={{ fontSize: '0.8rem', color: 'var(--text-dim)' }}>Zero-cost simulation environment</div>
+                <div style={{ fontWeight: 600, color: '#1F2937' }}>Operating Mode</div>
+                <div style={{ fontSize: '0.8rem', color: '#64748B' }}>Zero-cost simulation environment</div>
               </div>
               <span className={isDemo ? 'demo-pill' : 'live-pill'}>
                 {isDemo ? t.demoMode : t.liveMode}
               </span>
             </div>
 
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: '0.75rem', borderBottom: '1px solid rgba(22, 101, 52, 0.2)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: '0.75rem', borderBottom: '1px solid #E2E8F0' }}>
               <div>
-                <div style={{ fontWeight: 600, color: 'var(--text-main)' }}>{t.weatherProvider}</div>
-                <div style={{ fontSize: '0.8rem', color: 'var(--text-dim)' }}>Active adapter: <code>{settingsData?.weather_provider || 'demo'}</code></div>
+                <div style={{ fontWeight: 600, color: '#1F2937' }}>{t.weatherProvider}</div>
+                <div style={{ fontSize: '0.8rem', color: '#64748B' }}>Active adapter: <code>{settingsData?.weather_provider || 'demo'}</code></div>
               </div>
-              <span style={{ fontSize: '0.85rem', color: 'var(--primary-400)', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                <CheckCircle2 size={16} /> Ready
+              <span style={{ fontSize: '0.85rem', color: '#166534', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                <CheckCircle2 size={16} color="#166534" /> Ready
               </span>
             </div>
 
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: '0.75rem', borderBottom: '1px solid rgba(22, 101, 52, 0.2)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: '0.75rem', borderBottom: '1px solid #E2E8F0' }}>
               <div>
-                <div style={{ fontWeight: 600, color: 'var(--text-main)' }}>{t.smsProvider}</div>
-                <div style={{ fontSize: '0.8rem', color: 'var(--text-dim)' }}>Active adapter: <code>{settingsData?.sms_provider || 'demo'}</code> (Simulated)</div>
+                <div style={{ fontWeight: 600, color: '#1F2937' }}>{t.smsProvider}</div>
+                <div style={{ fontSize: '0.8rem', color: '#64748B' }}>Active adapter: <code>{settingsData?.sms_provider || 'demo'}</code> (Simulated)</div>
               </div>
-              <span style={{ fontSize: '0.85rem', color: '#f59e0b', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                <CheckCircle2 size={16} /> Simulated
+              <span style={{ fontSize: '0.85rem', color: '#92400E', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                <CheckCircle2 size={16} color="#D97706" /> Simulated
               </span>
             </div>
 
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <div>
-                <div style={{ fontWeight: 600, color: 'var(--text-main)' }}>Database Storage</div>
-                <div style={{ fontSize: '0.8rem', color: 'var(--text-dim)' }}>SQLite (Local file <code>tamilagri.db</code>)</div>
+                <div style={{ fontWeight: 600, color: '#1F2937' }}>Database Storage</div>
+                <div style={{ fontSize: '0.8rem', color: '#64748B' }}>SQLite (Local file <code>tamilagri.db</code>)</div>
               </div>
-              <span style={{ fontSize: '0.85rem', color: 'var(--primary-400)', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                <Database size={16} /> Connected
+              <span style={{ fontSize: '0.85rem', color: '#0F766E', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                <Database size={16} color="#0F766E" /> Connected
               </span>
             </div>
           </div>
@@ -77,16 +77,16 @@ export default function Settings({ t, lang, setLang, isDemo }) {
         {/* Demo Mode Details & Language Settings */}
         <div className="card">
           <h2 className="card-title">
-            <Radio size={20} color="var(--primary-400)" />
+            <Radio size={20} color="#166534" />
             {t.demoExplanation}
           </h2>
 
-          <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', lineHeight: 1.6, marginBottom: '1.25rem' }}>
+          <p style={{ fontSize: '0.9rem', color: '#64748B', lineHeight: 1.6, marginBottom: '1.25rem' }}>
             {t.demoExplanationText}
           </p>
 
-          <div style={{ background: 'var(--bg-surface-elevated)', padding: '1rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-subtle)', marginBottom: '1.25rem' }}>
-            <div style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-main)', marginBottom: '0.5rem' }}>
+          <div style={{ background: '#F8FAFC', padding: '1rem', borderRadius: 'var(--radius-sm)', border: '1px solid #E2E8F0', marginBottom: '1.25rem' }}>
+            <div style={{ fontSize: '0.85rem', fontWeight: 600, color: '#1F2937', marginBottom: '0.5rem' }}>
               Dashboard Display Language / மொழி
             </div>
             <div style={{ display: 'flex', gap: '0.75rem' }}>
@@ -122,16 +122,16 @@ export default function Settings({ t, lang, setLang, isDemo }) {
       </div>
 
       {/* TNAU Verification & Agronomic Thresholds Notice */}
-      <div className="card" style={{ borderLeft: '4px solid #f59e0b' }}>
-        <h2 className="card-title" style={{ color: '#fbbf24' }}>
-          <ShieldAlert size={20} />
+      <div className="card" style={{ borderLeft: '4px solid #D97706' }}>
+        <h2 className="card-title" style={{ color: '#92400E' }}>
+          <ShieldAlert size={20} color="#D97706" />
           {t.tnauVerificationHeader}
         </h2>
-        <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', lineHeight: 1.6, marginBottom: '1rem' }}>
+        <p style={{ fontSize: '0.9rem', color: '#64748B', lineHeight: 1.6, marginBottom: '1rem' }}>
           {t.tnauVerificationText}
         </p>
-        <div style={{ fontSize: '0.82rem', color: 'var(--text-dim)', background: 'rgba(6, 23, 18, 0.7)', padding: '0.85rem', borderRadius: 'var(--radius-sm)' }}>
-          <strong>Configured Rule Thresholds (backend/app/rules/crop_rules.py):</strong>
+        <div style={{ fontSize: '0.82rem', color: '#475569', background: '#F8FAFC', padding: '0.85rem 1rem', borderRadius: 'var(--radius-sm)', border: '1px solid #E2E8F0' }}>
+          <strong style={{ color: '#166534' }}>Configured Rule Thresholds (backend/app/rules/crop_rules.py):</strong>
           <ul style={{ marginLeft: '1.25rem', marginTop: '0.5rem', display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
             <li><strong>Nursery:</strong> Heavy Rain &gt; 50mm/day (submergence risk) | Heat &gt; 38°C (seedling scorch)</li>
             <li><strong>Tillering:</strong> Heavy Rain &gt; 65mm/day (tiller inhibition) | Heat &gt; 39°C (transpiration stress)</li>
