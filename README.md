@@ -8,7 +8,7 @@
 
 ## 📌 Project Overview
 
-TamilAgri AI is a software-only agricultural decision support and warning system tailored for farmers in Tamil Nadu. Upcoming weather patterns (heavy rainfall, extreme heat) are evaluated specifically against the farmer's crop growth stage (e.g., Flowering vs. Tillering). The system generates actionable precautions in simple Tamil or English and simulates early warning SMS alerts.
+**TamilAgri AI** is an AI-powered crop-specific climate risk analysis and multilingual SMS early warning system for farmers in Tamil Nadu. Upcoming weather patterns (heavy rainfall, extreme heat) are evaluated specifically against the farmer's crop growth stage (e.g., Flowering vs. Tillering). The system generates actionable precautions in simple Tamil or English and simulates early warning SMS alerts.
 
 ```mermaid
 graph TD
